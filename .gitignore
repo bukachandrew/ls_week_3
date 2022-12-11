@@ -5,5 +5,4 @@
 .idea
 
 composer.lock
-/vendor/
-/images/*
+/vendor/*
