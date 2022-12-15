@@ -6,6 +6,8 @@ include_once "../src/config.php";
 session_start();
 
 $route = new \Base\Route();
+$route->addRoute('/', \App\Controller\Blog::class, 'list');
+
 $route->addRoute('/login', \App\Controller\User::class, 'login');
 $route->addRoute('/registration', \App\Controller\User::class, 'registration');
 $route->addRoute('/logout', \App\Controller\User::class, 'logout');

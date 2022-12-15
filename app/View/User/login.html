@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+
+            <h1>Войти</h1>
+            <form action="/login" method="post" class="needs-validation">
+                <div class="mb-3">
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" class="form-control" id="email">
+                </div>
+                <div class="mb-3">
+                    <label for="password">Пароль:</label>
+                    <input type="password" name="password" class="form-control" id="password">
+                </div>
+                <hr class="mb-4">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Войти</button>
+            </form>
+
+        </div>
+    </div>
+
+    {% if errors %}
+        {% for error in errors %}
+            <p style="color: red;">{{ error|e }}</p>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

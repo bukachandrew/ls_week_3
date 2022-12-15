@@ -25,7 +25,8 @@ class Route
             $controller = new $controllerName;
             //$controller->$actionName();
 
-            $view = new View();
+            //$view = new View();
+            $view = new TwigView();
             $controller->setView($view);
             $content = $controller->{$actionName}();
 

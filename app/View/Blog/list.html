@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-6 offset-lg-3">
+
+            <h1>Блог</h1>
+
+            <ul>
+                {% for item in list %}
+                <li style="margin-bottom: 10px;">
+                    Пользователь: {{ item.name }}<br>
+                    Сообщение: {{ item.message }}<br>
+                    {% if item.image %}
+                    <img src="{{ item.image }}" alt="" style="max-width: 100px; margin: 5px 0;">
+                    {% endif %}
+                    {% if admin %}
+                    <form action="/delete-message" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="blog_id" value="{{ item.id }}">
+                        <input type="submit" value="Удалить">
+                    </form>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+
+            <form action="/add-message" enctype="multipart/form-data" method="post" class="needs-validation">
+                <div class="mb-3">
+                    <label for="message">Сообщение:</label>
+                    <textarea name="message" class="form-control" id="message"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="image">Картинка:</label>
+                    <input type="file" name="image" class="form-control" id="image" accept="image/png, image/jpeg">
+                </div>
+                <hr class="mb-4">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">Отправить</button>
+            </form>
+
+        </div>
+    </div>
+
+
+    {% if errors %}
+        {% for error in errors %}
+            <p style="color: red;">{{ error|e }}</p>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

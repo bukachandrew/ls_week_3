@@ -3,8 +3,10 @@
 namespace Base;
 
 use Base\Interface\View as ViewInterface;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
-class View implements ViewInterface
+class TwigView implements ViewInterface
 {
     private $templatePath;
 
@@ -15,9 +17,8 @@ class View implements ViewInterface
 
     public function render($tpl, $data = [])
     {
-        extract($data);
-        ob_start();
-        include $this->templatePath . DIRECTORY_SEPARATOR . $tpl;
-        return ob_get_clean();
+        $loader = new FilesystemLoader($this->templatePath);
+        $twig = new Environment($loader);
+        return $twig->render(DIRECTORY_SEPARATOR . $tpl, $data);
     }
 }

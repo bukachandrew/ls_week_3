@@ -9,6 +9,9 @@ class User extends BaseController
 {
     public function login()
     {
+        if (isset($_SESSION['id'])) {
+            header('location: /blog');
+        }
         $errors = [];
         if (isset($_POST['email'])) {
             $user = UserModel::getByEmail($_POST['email']);
@@ -26,8 +29,9 @@ class User extends BaseController
         }
 
         if ($this->view) {
-            return $this->view->render('User/login.phtml', [
-                'errors' => $errors
+            return $this->view->render('User/login.html', [
+                'errors' => $errors,
+                'login' => false,
             ]);
         }
     }
@@ -69,8 +73,9 @@ class User extends BaseController
 
 
         if ($this->view) {
-            return $this->view->render('User/registration.phtml', [
-                'errors' => $errors
+            return $this->view->render('User/registration.html', [
+                'errors' => $errors,
+                'login' => false,
             ]);
         }
     }

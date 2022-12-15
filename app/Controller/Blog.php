@@ -24,10 +24,11 @@ class Blog extends BaseController
         $list = $blogQuery->getList(20);
 
         if ($this->view) {
-            return $this->view->render('Blog/list.phtml', [
+            return $this->view->render('Blog/list.html', [
                 'errors' => $errors,
                 'list' => $list,
                 'user' => $user,
+                'login' => true,
                 'admin' => ($user['id'] == ADMIN_ID) ? true : false,
             ]);
         }
@@ -46,10 +47,9 @@ class Blog extends BaseController
         $message = null;
         if (!empty($_FILES['image']['tmp_name'])) {
             $fileContent = file_get_contents($_FILES['image']['tmp_name']);
-            file_put_contents('../images/'. $_FILES['image']['name'], $fileContent);
-            $message = '../images/'. $_FILES['image']['name'];
+            file_put_contents(PROJECT_ROOT_DIR . '/public/images/'. $_FILES['image']['name'], $fileContent);
+            $message = '/images/'. $_FILES['image']['name'];
         }
-
         $blogQuery = new BlogModel();
         $blog = $blogQuery->save($user['id'], $_POST['message'], $message);
 
@@ -76,13 +76,23 @@ class Blog extends BaseController
 
     public function userMessages() {
         if (!isset($_POST['user_id'])) {
-            return false;
+            return json_encode([
+                "message" => "Сообщений от пользователя с таким-то id нет",
+                "code" => 422
+            ]);
         }
         $blogQuery = new BlogModel();
         $list = $blogQuery->getListByUserId($_POST['user_id'], 20);
         if (!$list) {
-            return false;
+            return json_encode([
+                "message" => "Нет данных",
+                "code" => 200
+            ]);
         }
-        return json_encode($list);
+        return json_encode([
+            "message" => "Успех",
+            "data" => $list,
+            "code" => 200
+        ]);
     }
 }

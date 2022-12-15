@@ -2,11 +2,13 @@
 
 namespace Base;
 
+use Base\Interface\View as ViewInterface;
+
 abstract class Controller
 {
     protected $view;
 
-    public function setView(View $view): void
+    public function setView(ViewInterface $view): void
     {
         $this->view = $view;
     }
