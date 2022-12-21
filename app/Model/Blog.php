@@ -7,34 +7,25 @@ use Base\Db;
 
 class Blog extends BaseModel
 {
-    public function save(int $userId, string $message, string $image = null)
+    public function createBlog(int $userId, string $message, string $image = null)
     {
-        $db = Db::getInstance();
-        $queryUserAdd = "INSERT INTO `blog` (`user_id`, `message`, `image`) 
-            VALUES (:user_id, :user_message, :user_image)";
-        $id = $db->exec($queryUserAdd, [
-            ':user_id' => $userId,
-            ':user_message' => $message,
-            ':user_image' => $image
-        ]);
-        return $id;
+        $blog = new Blog();
+        $blog->user_id = $userId;
+        $blog->message = $message;
+        $blog->image = $image;
+        $blog->save();
+        return $blog['id'];
     }
 
-    public function delete(int $messageId)
+    public function deleteBlog(int $messageId)
     {
-        $db = Db::getInstance();
-        $queryUserAdd = "DELETE FROM `blog` WHERE `id` = :message_id";
-        $data = $db->exec($queryUserAdd, [
-            ':message_id' => $messageId,
-        ]);
+        $data = Blog::where('id', $messageId)->delete();
         return $data;
     }
 
     public function getById(int $id)
     {
-        $db = Db::getInstance();
-        $queryUser = "SELECT * FROM `blog` WHERE `id` = :blog_id";
-        $data = $db->fetchOne($queryUser, [':blog_id' => $id]);
+        $data = Blog::where('id', $id)->first();
         if (!$data) {
             return null;
         }
@@ -43,9 +34,7 @@ class Blog extends BaseModel
 
     public function getListByUserId(int $id, int $limit = 20)
     {
-        $db = Db::getInstance();
-        $queryBlog = "SELECT blog.id, blog.message, blog.created_at, blog.user_id, users.name, users.email FROM `blog`, `users` WHERE users.id = blog.user_id AND blog.user_id = :blog_id LIMIT $limit";
-        $data = $db->fetchAll($queryBlog, ['blog_id' => $id]);
+        $data = User::where('id', $id)->with('blogs')->limit($limit)->get();
         if (!$data) {
             return null;
         }
@@ -54,12 +43,15 @@ class Blog extends BaseModel
 
     public function getList(int $limit = 20)
     {
-        $db = Db::getInstance();
-        $queryBlog = "SELECT blog.*, users.name, users.email FROM `blog`, `users` WHERE blog.user_id = users.id LIMIT $limit";
-        $data = $db->fetchAll($queryBlog);
+        $data = Blog::query()->with('user')->limit($limit)->get();
         if (!$data) {
             return null;
         }
         return $data;
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

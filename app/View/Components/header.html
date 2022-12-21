@@ -2,6 +2,9 @@
     <h5 class="my-0 mr-md-auto font-weight-normal">Test</h5>
     <nav class="my-2 my-md-0 mr-md-3">
         <a class="p-2 text-dark" href="/blog">Блог</a>
+        {% if admin %}
+            <a class="p-2 text-dark" href="/users">Пользователи</a>
+        {% endif %}
     </nav>
 
     {% if login %}

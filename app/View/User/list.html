@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-6 offset-lg-3">
+
+        <h1>Пользователи</h1>
+
+        <ul>
+            {% for item in users %}
+            <li style="margin-bottom: 10px;">
+                Имя: {{ item.name }}<br>
+                Email: {{ item.email }}<br>
+                {% if item.image %}
+                    <img src="{{ item.image }}" alt="" style="max-width: 100px; margin: 5px 0;">
+                {% endif %}
+                {% if admin %}
+                <div class="bd-example">
+                    <a href="/users/edit?user-id={{ item.id }}" class="btn btn-primary">Изменить</a>
+                    <br>
+                    <form action="/delete-user" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="user_id" value="{{ item.id }}">
+                        <input type="submit" class="btn btn-danger" value="Удалить">
+                    </form>
+                </div>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+</div>
+
+
+{% if errors %}
+    {% for error in errors %}
+        <p style="color: red;">{{ error|e }}</p>
+    {% endfor %}
+{% endif %}
+{% endblock %}

@@ -10,7 +10,7 @@
             <ul>
                 {% for item in list %}
                 <li style="margin-bottom: 10px;">
-                    Пользователь: {{ item.name }}<br>
+                    Пользователь: {{ item.user.name }}<br>
                     Сообщение: {{ item.message }}<br>
                     {% if item.image %}
                     <img src="{{ item.image }}" alt="" style="max-width: 100px; margin: 5px 0;">
@@ -18,7 +18,7 @@
                     {% if admin %}
                     <form action="/delete-message" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="blog_id" value="{{ item.id }}">
-                        <input type="submit" value="Удалить">
+                        <input type="submit" class="btn btn-danger" value="Удалить">
                     </form>
                     {% endif %}
                 </li>

@@ -8,24 +8,19 @@ use Base\Db;
 class User extends BaseModel
 {
 
-    public function save($name, $email, $password)
+    public function createUser($name, $email, $password)
     {
-        $db = Db::getInstance();
-        $queryUserAdd = "INSERT INTO `users` (`name`, `email`, `password`) 
-            VALUES (:user_name, :user_email, :user_password)";
-        $id = $db->exec($queryUserAdd, [
-            ':user_name' => $name,
-            ':user_email' => $email,
-            ':user_password' => self::getPasswordHash($password)
-        ]);
-        return $id;
+        $user = new User();
+        $user->name = $name;
+        $user->email = $email;
+        $user->password = self::getPasswordHash($password);
+        $user->save();
+        return $user['id'];
     }
 
     public static function getById(int $id)
     {
-        $db = Db::getInstance();
-        $queryUser = "SELECT * FROM `users` WHERE `id` = :user_id";
-        $data = $db->fetchOne($queryUser, [':user_id' => $id]);
+        $data = User::where('id', $id)->first();
         if (!$data) {
             return null;
         }
@@ -34,9 +29,7 @@ class User extends BaseModel
 
     public static function getByEmail(string $email)
     {
-        $db = Db::getInstance();
-        $queryUser = "SELECT * FROM `users` WHERE `email` = :user_email";
-        $data = $db->fetchOne($queryUser, [':user_email' => $email]);
+        $data = User::where('email', $email)->first();
         if (!$data) {
             return null;
         }
@@ -48,5 +41,38 @@ class User extends BaseModel
         return sha1('kxwZ0aBB' . $password);
     }
 
+    public function getList(int $limit = 20)
+    {
+        $data = User::query()->limit($limit)->get();
+        if (!$data) {
+            return null;
+        }
+        return $data;
+    }
 
+    public function editUser(int $id, string $name, string $email, string $password = null, string $image = null)
+    {
+        $user = User::where('id', $id)->first();
+        $user->name = $name;
+        $user->email = $email;
+        if ($password) {
+            $user->password = $password;
+        }
+        if ($image) {
+            $user->image = $image;
+        }
+        $user->save();
+        return $user['id'];
+    }
+
+    public function deleteUser(int $userId)
+    {
+        $data = User::where('id', $userId)->delete();
+        return $data;
+    }
+
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class, 'user_id', 'id');
+    }
 }

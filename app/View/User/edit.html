@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-6 offset-lg-3">
+
+        <h1>Пользователь #{{ user.id }}</h1>
+        <br>
+
+        <form action="/edit-user" enctype="multipart/form-data" method="post" class="needs-validation">
+            <input type="hidden" name="id" value="{{ user.id }}">
+            <div class="mb-3">
+                <label for="name">Имя:</label>
+                <input type="text" name="name" id="name" value="{{ user.name }}">
+            </div>
+            <div class="mb-3">
+                <label for="email">Email:</label>
+                <input type="email" name="email" id="email" value="{{ user.email }}">
+            </div>
+            <div class="mb-3">
+                <label for="password">Пароль:</label>
+                <input type="password" name="password" value="" id="password">
+            </div>
+            <div class="mb-3">
+                <label for="image">Картинка:</label>
+                <input type="file" name="image" class="form-control" id="image" accept="image/png, image/jpeg">
+            </div>
+            <hr class="mb-4">
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Изменить</button>
+        </form>
+
+    </div>
+</div>
+
+
+{% if errors %}
+{% for error in errors %}
+<p style="color: red;">{{ error|e }}</p>
+{% endfor %}
+{% endif %}
+{% endblock %}

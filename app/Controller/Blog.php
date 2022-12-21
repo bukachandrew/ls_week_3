@@ -51,7 +51,7 @@ class Blog extends BaseController
             $message = '/images/'. $_FILES['image']['name'];
         }
         $blogQuery = new BlogModel();
-        $blog = $blogQuery->save($user['id'], $_POST['message'], $message);
+        $blog = $blogQuery->createBlog($user['id'], $_POST['message'], $message);
 
         if ($blog) {
             header('location: /blog');
@@ -70,7 +70,7 @@ class Blog extends BaseController
         }
 
         $blogQuery = new BlogModel();
-        $blog = $blogQuery->delete($_POST['blog_id']);
+        $blog = $blogQuery->deleteBlog($_POST['blog_id']);
         header('location: /blog');
     }
 
@@ -81,6 +81,7 @@ class Blog extends BaseController
                 "code" => 422
             ]);
         }
+
         $blogQuery = new BlogModel();
         $list = $blogQuery->getListByUserId($_POST['user_id'], 20);
         if (!$list) {
